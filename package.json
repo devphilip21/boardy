@@ -1,0 +1,46 @@
+{
+  "name": "boardy",
+  "version": "1.0.0",
+  "description": "it supports persist(vector based stateful), responsive, reactive drawing tools on web browser",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "NODE_ENV=development webpack-dev-server --config \"config/webpack.config.js\"",
+    "build": "NODE_ENV=production webpack --config \"config/webpack.config.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/load0ne/boardy.git"
+  },
+  "keywords": [
+    "board",
+    "drawing",
+    "drawing tool",
+    "responsive",
+    "vector based",
+    "stateful",
+    "context",
+    "canvas",
+    "persist"
+  ],
+  "author": "load0ne",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/load0ne/boardy/issues"
+  },
+  "homepage": "https://github.com/load0ne/boardy#readme",
+  "devDependencies": {
+    "@babel/core": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@typescript-eslint/eslint-plugin": "^3.5.0",
+    "@typescript-eslint/parser": "^3.5.0",
+    "babel-loader": "^8.1.0",
+    "eslint": "^7.4.0",
+    "eslint-config-google": "^0.14.0",
+    "html-webpack-plugin": "^4.3.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
