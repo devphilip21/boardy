@@ -1,7 +1,7 @@
 {
   "name": "boardy",
   "version": "1.0.0",
-  "description": "it supports persist(vector based stateful), responsive, reactive drawing tools on web browser",
+  "description": "responsive, persist, reactive drawing tools on web browser",
   "main": "src/index.ts",
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --config \"config/webpack.config.js\"",
