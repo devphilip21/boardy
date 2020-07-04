@@ -38,6 +38,7 @@
     "eslint": "^7.4.0",
     "eslint-config-google": "^0.14.0",
     "html-webpack-plugin": "^4.3.0",
+    "typescript": "^3.9.6",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
