@@ -1,11 +1,20 @@
 /* eslint-disable no-unused-vars */
 declare namespace T {
-  export type ShapeType = 'fragment' | 'line' | 'point'
-  export type ObserverPayload = {
-    type: ShapeType;
-    payload: any;
-  };
-  export type Observer = (payload: ObserverPayload) => void
-  export type Unregister = () => void;
-  export type RemoveChild = () => void;
+  export namespace Shape {
+    export type Type = 'f' | 'l' | 'p';
+    export type All = Fragment | Line | Point;
+    export type Fragment = {
+      t: 'f';
+      c: All[];
+    }
+    export type Line = {
+      t: 'l';
+      c: Point[];
+    }
+    export type Point = {
+      t: 'p';
+      x: number;
+      y: number;
+    }
+  }
 }
