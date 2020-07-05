@@ -6,22 +6,34 @@
  */
 export default abstract class Shape {
   protected children: Shape[];
-  protected observers: { [key: string]: Boardy.Observer };
-  private observerKey: number;
+  protected observers: T.Observer[];
 
   constructor() {
     this.children = [];
-    this.observers = {};
-    this.observerKey = 0;
+    this.observers = [];
   }
 
-  public registerObserver(observer: Boardy.Observer): Boardy.UnregisterFunc {
-    const key: number = ++this.observerKey;
-    const unregister: Boardy.UnregisterFunc = () => {
-      delete this.observers[key];
+  public addChild(child: Shape) {
+    const index: number = this.children.length;
+    const removeChild: T.RemoveChild = () => {
+      this.children.splice(index, 1);
     };
 
-    this.observers[key] = observer;
+    this.children.push(child);
+    child.registerObserver((payload) => {
+      this.notify(payload);
+    });
+
+    return removeChild;
+  }
+
+  public registerObserver(observer: T.Observer): T.Unregister {
+    const index: number = this.children.length;
+    const unregister: T.Unregister = () => {
+      this.observers.splice(index, 1);
+    };
+
+    this.observers.push(observer);
 
     return unregister;
   }
@@ -36,4 +48,11 @@ export default abstract class Shape {
   }
 
   public abstract serializeThis(): any
+
+  protected notify(payload: T.ObserverPayload) {
+    // eslint-disable-next-line guard-for-in
+    for (let i = 0; i < this.observers.length; ++i) {
+      this.observers[i](payload);
+    }
+  }
 }
