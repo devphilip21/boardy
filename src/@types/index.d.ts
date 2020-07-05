@@ -1,20 +1,28 @@
 /* eslint-disable no-unused-vars */
 declare namespace T {
-  export namespace Shape {
-    export type Type = 'f' | 'l' | 'p';
-    export type All = Fragment | Line | Point;
-    export type Fragment = {
-      t: 'f';
-      c: All[];
-    }
-    export type Line = {
-      t: 'l';
-      c: Point[];
-    }
-    export type Point = {
-      t: 'p';
-      x: number;
-      y: number;
-    }
+  export enum ShapeType {
+    Fragment,
+    Line,
+    Point,
+  }
+  export enum ActionType {
+    DrawLine
+  }
+  export type Shape = Fragment | Line | Point;
+  export type Fragment = {
+    t: ShapeType;
+    c: Shape[];
+  }
+  export type Line = {
+    t: ShapeType;
+    c: Point[];
+  }
+  export type Point = {
+    t: ShapeType;
+    c: number[];
+  }
+  export type Action = {
+    t: ActionType,
+    s: Shape
   }
 }
