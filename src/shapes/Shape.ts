@@ -1,3 +1,9 @@
+/**
+ * Shape (abstract)
+ *   - observable
+ *   - tree structure
+ *   - serialize
+ */
 export default abstract class Shape {
   protected children: Shape[];
   protected observers: { [key: string]: Boardy.Observer };
