@@ -7,6 +7,20 @@ it supports following three features, basically.
 2. **Persist** : boardy is designed to be able to export context as **object like json**, and you can repaint by importing this context object. we considered this context object to be used for real-time network, so optimize context object size.
 3. **Reactive** : boardy supports [flux architecture](https://facebook.github.io/flux/). if boardy is connected store(shape tree), canvas will automatically render on state change of shape tree.
 
+<br/>
+
+## How to work
+
+<img src="https://kr.object.ncloudstorage.com/load0ne/dropy/how-to-work.png" width="500" alt="how-to-work">
+
+<br/>
+
+## Realtime application architect
+
+<img src="https://kr.object.ncloudstorage.com/load0ne/dropy/real-time-architect.png" width="500" alt="realtime-app-architect">
+
+<br/>
+
 ## Cross Browsing
 
 - `last 2 version`
