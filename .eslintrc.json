@@ -15,5 +15,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "require-jsdoc": "off",
+        "indent": ["error", 2]
     }
 }
