@@ -11,13 +11,13 @@ it supports following three features, basically.
 
 ## How to work
 
-<img src="https://kr.object.ncloudstorage.com/load0ne/dropy/how-to-work.png" width="500" alt="how-to-work">
+<img src="https://kr.object.ncloudstorage.com/load0ne/dropy/how-to-work-v2.png" width="500" alt="how-to-work">
 
 <br/>
 
 ## Realtime application architect
 
-<img src="https://kr.object.ncloudstorage.com/load0ne/dropy/real-time-architect.png" width="500" alt="realtime-app-architect">
+<img src="https://kr.object.ncloudstorage.com/load0ne/dropy/real-time-architect-v2.png" width="500" alt="realtime-app-architect">
 
 <br/>
 
