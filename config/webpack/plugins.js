@@ -7,7 +7,7 @@ module.exports = (_, isDev) => {
     return {
       plugins: [
         new HtmlWebpackPlugin({
-          template: Path.resolve(__dirname, './template.html')
+          template: Path.resolve(__dirname, './template.html'),
         }),
       ],
     };
@@ -16,7 +16,7 @@ module.exports = (_, isDev) => {
   return {
     optimization: {
       minimizer: [
-        new UglifyJsPlugin()
+        new UglifyJsPlugin(),
       ],
     },
   };
