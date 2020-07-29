@@ -1,5 +1,5 @@
 import DomController from './DomController';
-import {Viewport} from '@/@types/global';
+import {Viewport, Action} from '@/@types/global';
 import {STATE_LINE} from '@/constants/state';
 import * as T from '@/constants/action';
 
@@ -18,18 +18,18 @@ export default class Drawer {
     this.state = {};
   }
 
-  public draw(action: T.Action): void {
+  public draw(action: Action): void {
     switch (action[1] as T.ActionType) {
-    case T.ActionType.LineStart: {
-      this.lineStart(action);
+    case T.ActionType.Start: {
+      this.pathStart(action);
       break;
     }
-    case T.ActionType.LineMove: {
-      this.lineMove(action);
+    case T.ActionType.Move: {
+      this.pathMove(action);
       break;
     }
-    case T.ActionType.LineEnd: {
-      this.lineEnd(action);
+    case T.ActionType.End: {
+      this.pathEnd(action);
       break;
     }
     }
@@ -43,7 +43,7 @@ export default class Drawer {
     this.dom.setPathD(pathId, nextPath);
   }
 
-  private lineStart(action: T.Action): void {
+  private pathStart(action: Action): void {
     const pathId: string = `${action[0]}`;
     const pathElement: HTMLElement = this.dom.getPathElement(
       pathId,
@@ -51,10 +51,12 @@ export default class Drawer {
 
     pathElement.style.stroke = '#000';
     pathElement.style.strokeWidth = `${this.viewport.unit}`;
+    pathElement.style.fill = 'none';
+    pathElement.style.strokeLinejoin = 'round';
     this.appendPath(pathId, pathElement, `M${action[2]},${action[3]}`);
   }
 
-  private lineMove(action: T.Action): void {
+  private pathMove(action: Action): void {
     const pathId: string = `${action[0]}`;
     const pathElement: Element = this.dom.getPathElement(pathId);
     const dValue: string = this.state[pathId] === STATE_LINE ?
@@ -65,11 +67,9 @@ export default class Drawer {
     this.appendPath(pathId, pathElement, dValue);
   }
 
-  private lineEnd(action: T.Action): void {
+  private pathEnd(action: Action): void {
     const pathId: string = `${action[0]}`;
-    const pathElement: Element = this.dom.getPathElement(pathId);
 
     delete this.state[pathId];
-    this.appendPath(pathId, pathElement, 'Z');
   }
 }

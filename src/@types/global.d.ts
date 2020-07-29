@@ -14,3 +14,6 @@ export type IntializeOptions = {
   // resolution height is auto calculated using size.
   resolutionWidth?: number,
 }
+
+// [PathId, ActionType, PointX, PointY]
+export type Action = Uint32Array;
