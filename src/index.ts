@@ -1,5 +1,6 @@
 import Renderer from './modules/Renderer';
 import Trigger from './modules/Trigger';
+import Shape from './modules/Shape';
 import {Viewport, IntializeOptions} from './@types/global';
 
 /**
@@ -7,6 +8,7 @@ import {Viewport, IntializeOptions} from './@types/global';
  */
 export default class Boardy {
   private viewport: Viewport;
+  public shape: Shape;
   public renderer: Renderer;
   public trigger: Trigger;
 
@@ -14,8 +16,9 @@ export default class Boardy {
     containerElement: null,
   }) {
     this.viewport = this.createViewport(options);
-    this.renderer = new Renderer(this.viewport);
-    this.trigger = new Trigger(this.viewport);
+    this.shape = new Shape();
+    this.renderer = new Renderer(this.viewport, this.shape);
+    this.trigger = new Trigger(this.viewport, this.shape);
   }
 
   private createViewport(options?: IntializeOptions): Viewport {

@@ -1,7 +1,8 @@
 import DomController from './DomController';
-import {Viewport, Action} from '@/@types/global';
+import {Viewport, Action, ShapeStyle} from '@/@types/global';
 import {STATE_LINE} from '@/constants/state';
 import * as T from '@/constants/action';
+import Shape from './Shape';
 
 /**
  * draw path on svg element
@@ -9,11 +10,13 @@ import * as T from '@/constants/action';
  */
 export default class Drawer {
   private viewport: Viewport;
+  private shape: Shape;
   private dom: DomController;
   private state: { [pathId: string]: string }; // cache path-d
 
-  constructor(viewport: Viewport) {
+  constructor(viewport: Viewport, shape: Shape) {
     this.viewport = viewport;
+    this.shape = shape;
     this.dom = new DomController(viewport);
     this.state = {};
   }
@@ -45,14 +48,10 @@ export default class Drawer {
 
   private pathStart(action: Action): void {
     const pathId: string = `${action[0]}`;
-    const pathElement: HTMLElement = this.dom.getPathElement(
-      pathId,
-    ) as HTMLElement;
+    const pathElement: Element = this.dom.getPathElement(pathId);
+    const styles: ShapeStyle = this.shape.get(action[4]);
 
-    pathElement.style.stroke = '#000';
-    pathElement.style.strokeWidth = `${this.viewport.unit}`;
-    pathElement.style.fill = 'none';
-    pathElement.style.strokeLinejoin = 'round';
+    this.setPathStyle(pathElement, styles);
     this.appendPath(pathId, pathElement, `M${action[2]},${action[3]}`);
   }
 
@@ -71,5 +70,29 @@ export default class Drawer {
     const pathId: string = `${action[0]}`;
 
     delete this.state[pathId];
+  }
+
+  private setPathStyle(pathElement: Element, styles: ShapeStyle): void {
+    if (!styles || typeof styles !== 'object') {
+      return;
+    }
+
+    const el: HTMLElement = pathElement as HTMLElement;
+
+    for (const styleKey in styles) {
+      switch (styleKey) {
+      case 'strokeWidth': {
+        el.style[styleKey] = `${parseInt(styles[styleKey]) * this.viewport.unit}`;
+        break;
+      }
+      default: {
+        el.style[styleKey] = styles[styleKey];
+        break;
+      }
+      }
+    }
+
+    el.style.fill = 'none';
+    el.style.strokeLinejoin = 'round';
   }
 }

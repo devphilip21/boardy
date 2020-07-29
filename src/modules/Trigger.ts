@@ -1,3 +1,4 @@
+import Shape from './Shape';
 import {Viewport} from '@/@types/global';
 import {Action} from '@/@types/global.d';
 import EventChannel from '@/utils/EventChannel';
@@ -9,8 +10,10 @@ export default class Trigger extends EventChannel<Action> {
   private triggerElement: Element;
   private id: IdGenerator;
   private drawedPathId: number;
+  private shape: Shape;
+  private usedShapeKey: number;
 
-  constructor(viewport: Viewport) {
+  constructor(viewport: Viewport, shape: Shape) {
     super();
     this.viewport = viewport;
     this.triggerElement = this.createTriggerElement();
@@ -20,6 +23,12 @@ export default class Trigger extends EventChannel<Action> {
     this.triggerElement.addEventListener('mousemove', this.handleMouseMove);
     this.id = new IdGenerator();
     this.drawedPathId = null;
+    this.shape = shape;
+    this.usedShapeKey = IdGenerator.hashStringToNumber('default');
+  }
+
+  public useShape(shapeKey: string) {
+    this.usedShapeKey = IdGenerator.hashStringToNumber(shapeKey);
   }
 
   private createTriggerElement(): Element {
@@ -47,12 +56,13 @@ export default class Trigger extends EventChannel<Action> {
     pointX: number,
     pointY: number,
   ) {
-    const action: Uint32Array = Uint32Array ? new Uint32Array(4) : [] as any;
+    const action: Uint32Array = Uint32Array ? new Uint32Array(5) : [] as any;
 
     action[0] = pathId;
     action[1] = actionType;
     action[2] = pointX * this.viewport.unit;
     action[3] = pointY * this.viewport.unit;
+    action[4] = this.usedShapeKey || 0;
 
     return action;
   }
@@ -79,7 +89,6 @@ export default class Trigger extends EventChannel<Action> {
       e.offsetX,
       e.offsetY,
     );
-
 
     this.emit(action);
   }
