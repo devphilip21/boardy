@@ -1,7 +1,5 @@
 export enum ActionType {
-  LineStart,
-  LineMove,
-  LineEnd,
+  Start,
+  Move,
+  End,
 }
-// [PathId, ActionType, PointX, PointY]
-export type Action = Uint32Array;
