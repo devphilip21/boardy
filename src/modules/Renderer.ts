@@ -1,6 +1,6 @@
 import Drawer from './Drawer';
-import * as T from '@/constants/action';
 import {Viewport, Action} from '@/@types/global';
+import Shape from './Shape';
 
 /**
  * Rendering on svg element by action
@@ -8,8 +8,8 @@ import {Viewport, Action} from '@/@types/global';
 export default class Renderer {
   private drawer: Drawer;
 
-  constructor(viewport: Viewport) {
-    this.drawer = new Drawer(viewport);
+  constructor(viewport: Viewport, shape: Shape) {
+    this.drawer = new Drawer(viewport, shape);
   }
 
   public render(action: Action): void {

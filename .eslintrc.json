@@ -20,6 +20,7 @@
         "no-unused-vars": "off",
         "valid-jsdoc": "off",
         "no-invalid-this": "off",
-        "max-len": ["error", { "code": 100 }]
+        "max-len": ["error", { "code": 100 }],
+        "guard-for-in": "off"
     }
 }

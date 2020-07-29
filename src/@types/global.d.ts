@@ -15,5 +15,13 @@ export type IntializeOptions = {
   resolutionWidth?: number,
 }
 
-// [PathId, ActionType, PointX, PointY]
+// [PathId, ActionType, PointX, PointY, ShapeKey]
 export type Action = Uint32Array;
+
+export type ShapeStyle = {
+  [styleKey: string]: any
+}
+
+export type ShapeMap = {
+  [hash: number]: ShapeStyle
+}
