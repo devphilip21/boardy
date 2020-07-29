@@ -1,7 +1,6 @@
-import Cache from './Cache';
-import {tenToThePowerOf} from '@/utils/math';
+import DomController from './DomController';
+import {Viewport} from '@/@types/global';
 import {STATE_LINE} from '@/constants/state';
-import {NS_SVG} from '@/constants/markup';
 import * as T from '@/constants/action';
 
 /**
@@ -9,30 +8,14 @@ import * as T from '@/constants/action';
  * - cache all doms in SVG Element, for improving render performance.
  */
 export default class Drawer {
-  private svgElement: Element;
-  private resolution: [number, number];
-  private cache: Cache;
+  private viewport: Viewport;
+  private dom: DomController;
   private state: { [pathId: string]: string }; // cache path-d
-  private unit: number; // 1px by resolution width
 
-  constructor(
-    svgElement: Element,
-    svgSize: [number, number],
-    resolutionPowers: [number, number],
-  ) {
-    this.resolution = resolutionPowers.map(
-      (power) => tenToThePowerOf(power),
-    ) as [number, number];
-    this.svgElement = svgElement;
-    this.svgElement.setAttribute('width', `${svgSize[0]}`);
-    this.svgElement.setAttribute('height', `${svgSize[1]}`);
-    this.svgElement.setAttribute(
-      'viewBox',
-      `0 0 ${this.resolution[0]} ${this.resolution[1]}`,
-    );
-    this.cache = new Cache(this.svgElement);
+  constructor(viewport: Viewport) {
+    this.viewport = viewport;
+    this.dom = new DomController(viewport);
     this.state = {};
-    this.unit = this.resolution[0] / svgSize[0];
   }
 
   public draw(action: T.Action): void {
@@ -53,27 +36,27 @@ export default class Drawer {
   }
 
   private appendPath(pathId: string, pathElement: Element, dValue: string) {
-    const prevPath: string = this.cache.getPathD(pathId);
+    const prevPath: string = this.dom.getPathD(pathId);
     const nextPath: string = prevPath ? `${prevPath} ${dValue}` : dValue;
 
     pathElement.setAttributeNS(null, 'd', nextPath);
-    this.cache.setPathD(pathId, nextPath);
+    this.dom.setPathD(pathId, nextPath);
   }
 
   private lineStart(action: T.Action): void {
     const pathId: string = `${action[0]}`;
-    const pathElement: HTMLElement = this.cache.getPathElement(
+    const pathElement: HTMLElement = this.dom.getPathElement(
       pathId,
     ) as HTMLElement;
 
     pathElement.style.stroke = '#000';
-    pathElement.style.strokeWidth = `${this.unit}`;
+    pathElement.style.strokeWidth = `${this.viewport.unit}`;
     this.appendPath(pathId, pathElement, `M${action[2]},${action[3]}`);
   }
 
   private lineMove(action: T.Action): void {
     const pathId: string = `${action[0]}`;
-    const pathElement: Element = this.cache.getPathElement(pathId);
+    const pathElement: Element = this.dom.getPathElement(pathId);
     const dValue: string = this.state[pathId] === STATE_LINE ?
       `${action[2]},${action[3]}` :
       `L${action[2]},${action[3]}`;
@@ -84,7 +67,7 @@ export default class Drawer {
 
   private lineEnd(action: T.Action): void {
     const pathId: string = `${action[0]}`;
-    const pathElement: Element = this.cache.getPathElement(pathId);
+    const pathElement: Element = this.dom.getPathElement(pathId);
 
     delete this.state[pathId];
     this.appendPath(pathId, pathElement, 'Z');
