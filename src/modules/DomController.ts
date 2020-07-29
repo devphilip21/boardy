@@ -1,21 +1,25 @@
 import {NS_SVG} from '@/constants/markup';
+import {Viewport} from '@/@types/global';
 
 // path can be big data
 const PATH_CACHE_LIMIT = 100;
 
-export default class Cache {
+/**
+ * cache dom, and if new dom is required, create it
+ */
+export default class DomController {
   private svgElement: Element;
   private elCache: { [pathId: string]: Element };
   private pathCache: { [pathId: string]: string };
   private svgId: string;
   private pathCacheLength: number;
 
-  constructor(svgElement: Element) {
-    this.svgElement = svgElement;
+  constructor(viewport: Viewport) {
+    this.svgElement = viewport.svgElement;
     this.elCache = {};
     this.pathCache = {};
     this.pathCacheLength = 0;
-    this.svgId = svgElement.id;
+    this.svgId = viewport.id;
   }
 
   public getPathElement(pathId: string): Element {
