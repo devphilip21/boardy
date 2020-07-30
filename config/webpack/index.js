@@ -5,7 +5,8 @@ const configPlugins = require('./plugins');
 
 /**
  * config merge pipe
- * @param {string} mode 
+ * @param {string} mode
+ * @return {any} config
  */
 module.exports = (mode) => {
   const isDev = mode === 'development';

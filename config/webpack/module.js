@@ -3,13 +3,15 @@ const Fs = require('fs');
 
 module.exports = () => {
   const browsers = Fs
-    .readFileSync(Path.resolve(__dirname, '../../.browserslistrc'), { encoding: 'utf8' })
+    .readFileSync(Path.resolve(__dirname, '../../.browserslistrc'), {
+      encoding: 'utf8',
+    })
     .split('\n')
-    .map(str => str.trim())
-    .filter(str => str);
+    .map((str) => str.trim())
+    .filter((str) => str);
 
   console.log(`[[ Supported Browsers ]]`);
-  browsers.forEach(browser => {
+  browsers.forEach((browser) => {
     console.log(`  - ${browser}`);
   });
 
@@ -29,13 +31,18 @@ module.exports = () => {
           options: {
             presets: [
               '@babel/preset-typescript',
-              ['@babel/preset-env', {
-                targets: { browsers }
-              }],
+              [
+                '@babel/preset-env', {
+                  targets: {browsers},
+                },
+              ],
             ],
-          }
-        }
-      ]
+            plugins: [
+              '@babel/plugin-proposal-class-properties',
+            ],
+          },
+        },
+      ],
     },
-  }
+  };
 };

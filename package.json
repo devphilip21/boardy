@@ -4,8 +4,8 @@
   "description": "responsive, persist, reactive drawing tools on web browser",
   "main": "src/index.ts",
   "scripts": {
-    "start": "NODE_ENV=development webpack-dev-server --config \"config/webpack.config.js\"",
-    "build": "NODE_ENV=production webpack --config \"config/webpack.config.js\""
+    "start": "NODE_ENV=development webpack-dev-server",
+    "build": "NODE_ENV=production webpack"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
   "homepage": "https://github.com/load0ne/boardy#readme",
   "devDependencies": {
     "@babel/core": "^7.10.4",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
     "@typescript-eslint/eslint-plugin": "^3.5.0",

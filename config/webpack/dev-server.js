@@ -3,9 +3,9 @@ module.exports = (_, isDev) => {
     return {
       devServer: {
         port: 8000,
-      }
+      },
     };
   }
-  
+
   return {};
-}
+};
