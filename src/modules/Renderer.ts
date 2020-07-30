@@ -7,13 +7,34 @@ import Shape from './Shape';
  */
 export default class Renderer {
   private drawer: Drawer;
+  private actionQueue: Action[];
+  private flag: boolean;
 
   constructor(viewport: Viewport, shape: Shape) {
     this.drawer = new Drawer(viewport, shape);
+    this.actionQueue = [];
+    this.flag = false;
+    this.startLoop();
   }
 
   public render(action: Action): void {
-    // TODO: render loop
-    this.drawer.draw(action);
+    this.actionQueue.push(action);
+  }
+
+  public startLoop() {
+    this.flag = true;
+    window.requestAnimationFrame(this.animate);
+  }
+
+  public stopLoop() {
+    this.flag = false;
+  }
+
+  private readonly animate = () => {
+    this.actionQueue.forEach((action) => this.drawer.draw(action));
+    this.actionQueue = [];
+    if (this.flag) {
+      window.requestAnimationFrame(this.animate);
+    }
   }
 }
