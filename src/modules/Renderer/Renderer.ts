@@ -1,17 +1,22 @@
-import Drawer from './Drawer';
-import {Viewport, Action} from '@/@types/global';
-import Shape from './Shape';
+import {Action} from '@/@types/global';
+import Painter from '@/modules/Painter';
+import Rasterizer from '@/modules/Rasterizer';
 
 /**
- * Rendering on svg element by action
+ * Render Loop per vsync
  */
 export default class Renderer {
-  private drawer: Drawer;
+  private painter: Painter;
+  private rasterizer: Rasterizer;
   private actionQueue: Action[];
   private flag: boolean;
 
-  constructor(viewport: Viewport, shape: Shape) {
-    this.drawer = new Drawer(viewport, shape);
+  constructor(
+    painter: Painter,
+    rasterizer: Rasterizer,
+  ) {
+    this.painter = painter;
+    this.rasterizer = rasterizer;
     this.actionQueue = [];
     this.flag = false;
     this.startLoop();
@@ -31,8 +36,9 @@ export default class Renderer {
   }
 
   private readonly animate = () => {
-    this.actionQueue.forEach((action) => this.drawer.draw(action));
+    this.actionQueue.forEach((action) => this.painter.paint(action));
     this.actionQueue = [];
+    this.rasterizer.rasterize();
     if (this.flag) {
       window.requestAnimationFrame(this.animate);
     }
