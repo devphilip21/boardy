@@ -1,70 +1,109 @@
-import Renderer from './modules/Renderer';
 import Trigger from './modules/Trigger';
-import Shape from './modules/Shape';
-import {Viewport, IntializeOptions} from './@types/global';
+import Renderer from './modules/Renderer';
+import {Context, Action} from './@types/global';
+import Painter from '@/modules/Painter';
+import Rasterizer from './modules/Rasterizer';
+
+type IntializeOptions = {
+  canvas?: HTMLCanvasElement,
+  resolution?: {
+    width?: number,
+    height?: number,
+  }
+  painter?: Painter
+}
 
 /**
  * Entry Module
  */
 export default class Boardy {
-  private viewport: Viewport;
-  public shape: Shape;
-  public renderer: Renderer;
-  public trigger: Trigger;
+  private context: Context;
+  private renderer: Renderer;
+  private trigger: Trigger;
 
-  constructor(options: IntializeOptions = {
-    containerElement: null,
-  }) {
-    this.viewport = this.createViewport(options);
-    this.shape = new Shape();
-    this.renderer = new Renderer(this.viewport, this.shape);
-    this.trigger = new Trigger(this.viewport, this.shape);
+  constructor(options: IntializeOptions) {
+    if (!options.canvas) {
+      throw new Error('canvas element is required!');
+    }
+
+    // global context of all modules.
+    this.context = this.initalizeContext(options);
+
+    // dispatcher role in flux architecture.
+    this.renderer = new Renderer(
+      options.painter || new Painter(this.context),
+      new Rasterizer(this.context),
+    );
+
+    // trigger events (ex. mouse event)
+    this.trigger = new Trigger(this.context);
   }
 
-  private createViewport(options?: IntializeOptions): Viewport {
-    const id: string = options.id || 'boardy';
-    const containerElement: Element = options.containerElement ||
-      window.document.body;
-    const size: [number, number] = options.size || [500, 500];
-    const resolution: [number, number] = options.resolutionWidth ?
-      [options.resolutionWidth, (options.resolutionWidth / size[0]) * size[1]] :
-      [100000, (100000 / size[0]) * size[1]];
-    const unit: number = size[0] > size[1] ?
-      resolution[1] / size[1] :
-      resolution[0] / size[0];
+  public on(handler: (action: Action) => void) {
+    this.trigger.on(handler);
+  }
+
+  public render(action: Action) {
+    this.renderer.render(action);
+  }
+
+  /**
+   * options => context
+   *   + offscreen canvas
+   *   + unit
+   */
+  private initalizeContext(options?: IntializeOptions): Context {
+    const screenElement: HTMLCanvasElement = options.canvas;
+    const offscreenElement: HTMLCanvasElement = document.createElement('canvas');
+    const size: [number, number] = [
+      screenElement.offsetWidth,
+      screenElement.offsetHeight,
+    ] || [500, 500];
+    const resolution: [number, number] = this.initializeResolution(options, size);
+    const unit: number = this.calculateUnit(size, resolution);
+
+    offscreenElement.width = resolution[0];
+    offscreenElement.height = resolution[1];
 
     return {
-      id,
-      containerElement,
-      svgElement: this.createSvgElement(id, containerElement, size, resolution),
+      canvas: {
+        screen: screenElement,
+        offscreen: offscreenElement,
+      },
+      ctx: {
+        screen: screenElement.getContext('2d'),
+        offscreen: offscreenElement.getContext('2d'),
+      },
       size,
       resolution,
       unit,
     };
   }
 
-  private createSvgElement(
-    id: string,
-    containerElement: Element,
+  private initializeResolution(
+    options: IntializeOptions,
     size: [number, number],
-    resolution: [number, number],
-  ) {
-    if (!containerElement) {
-      throw new Error('container element is required !');
+  ): [number, number] {
+    const resolution: [number, number] = [0, 0];
+
+    if (options.resolution) {
+      resolution[0] = options.resolution.width ||
+        (options.resolution.height / size[1]) * size[0];
+      resolution[1] = options.resolution.height ||
+        (options.resolution.width / size[0]) * size[1];
+    } else {
+      resolution[0] = 2048;
+      resolution[1] = (resolution[0] / size[0] * size[1]);
     }
 
-    const attrs: string[] = [
-      'xmlns="http://www.w3.org/2000/svg"',
-      'xmlns:xlink="http://www.w3.org/1999/xlink"',
-      `id="${id}"`,
-      `width="${size[0]}"`,
-      `height="${size[1]}"`,
-      `viewBox="0 0 ${resolution[0]} ${resolution[1]}"`,
-    ];
-    const svgHtml: string = `<svg ${attrs.join(' ')}></svg>`;
+    return resolution;
+  }
 
-    containerElement.insertAdjacentHTML('beforeend', svgHtml);
+  private calculateUnit(size: [number, number], resolution: [number, number]): number {
+    const unit: number = size[0] > size[1] ?
+      resolution[1] / size[1] :
+      resolution[0] / size[0];
 
-    return document.querySelector(`#${id}`);
+    return unit;
   }
 }

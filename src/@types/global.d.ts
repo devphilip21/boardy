@@ -1,27 +1,19 @@
-export type Viewport = {
-  id: string,
-  containerElement: Element,
-  svgElement: Element,
+export type Context = {
+  canvas: {
+    screen: HTMLCanvasElement,
+    offscreen: HTMLCanvasElement,
+  },
+  ctx: {
+    screen: CanvasRenderingContext2D,
+    offscreen: CanvasRenderingContext2D,
+  },
   size: [number, number],
   resolution: [number, number],
   unit: number
 }
 
-export type IntializeOptions = {
-  id?: string,
-  containerElement: Element,
-  size?: [number, number],
-  // resolution height is auto calculated using size.
-  resolutionWidth?: number,
-}
-
-// [PathId, ActionType, PointX, PointY, ShapeKey]
+/**
+ * @description
+ * [ActionType, PointX, PointY, DrawingId]
+ */
 export type Action = Uint32Array;
-
-export type ShapeStyle = {
-  [styleKey: string]: any
-}
-
-export type ShapeMap = {
-  [hash: number]: ShapeStyle
-}
