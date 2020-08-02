@@ -1,6 +1,5 @@
 import Tool, {Drawing} from '@/modules/Tool';
 import {Context, Action} from '@/@types/global';
-import {ActionType} from '@/constants';
 import {IdGenerator} from '@/utils';
 import * as tools from './tools';
 
@@ -14,8 +13,10 @@ export default class Painter {
 
   constructor(context: Context) {
     this.context = context;
+    this.context.ctx.offscreen.globalCompositeOperation = 'source-over';
     this.tools = {
       [IdGenerator.hashStringToNumber('blackline')]: tools.blackline,
+      [IdGenerator.hashStringToNumber('eraser')]: tools.eraser,
     };
   }
 
@@ -23,7 +24,8 @@ export default class Painter {
     const actionType: number = action[0];
     const pointX: number = action[1];
     const pointY: number = action[2];
-    const toolId: number = action[3];
+    const unit: number = action[3];
+    const toolId: number = action[4];
     const drawing: Drawing = this.tools[toolId] && this.tools[toolId].get(actionType);
 
     if (drawing) {
@@ -31,7 +33,7 @@ export default class Painter {
         this.context.ctx.offscreen,
         pointX,
         pointY,
-        this.context.unit,
+        unit,
       );
     }
   }
