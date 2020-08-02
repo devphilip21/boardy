@@ -1,4 +1,4 @@
-import Boardy from './index';
+import Boardy from '@/Boardy';
 
 // 1. initialize boardy module
 const boardy = new Boardy({

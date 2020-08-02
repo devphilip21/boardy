@@ -2,12 +2,12 @@ const Path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = (_, isDev) => {
+module.exports = (_, isDev, example) => {
   if (isDev) {
     return {
       plugins: [
         new HtmlWebpackPlugin({
-          template: Path.resolve(__dirname, './template.html'),
+          template: Path.resolve(__dirname, `../../examples/${example}/index.html`),
         }),
       ],
     };
