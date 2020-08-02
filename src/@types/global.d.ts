@@ -14,6 +14,6 @@ export type Context = {
 
 /**
  * @description
- * [ActionType, PointX, PointY, toolId]
+ * [ActionType, PointX, PointY, Unit, toolId]
  */
 export type Action = Uint32Array;

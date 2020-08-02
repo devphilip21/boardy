@@ -8,6 +8,12 @@ export default class Rasterizer {
   }
 
   public rasterize() {
+    this.context.ctx.screen.clearRect(
+      0,
+      0,
+      this.context.resolution[0],
+      this.context.resolution[1],
+    );
     this.context.ctx.screen.drawImage(
       this.context.canvas.offscreen,
       0,

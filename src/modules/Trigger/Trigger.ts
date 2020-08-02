@@ -53,12 +53,13 @@ export default class Trigger extends EventChannel<Action> {
   }
 
   private createMouseAction(e: MouseEvent, actionType: ActionType): Action {
-    const action: Action = Uint32Array ? new Uint32Array(4) : ([] as any);
+    const action: Action = Uint32Array ? new Uint32Array(5) : ([] as any);
 
     action[0] = actionType;
     action[1] = e.offsetX * this.context.unit;
     action[2] = e.offsetY * this.context.unit;
-    action[3] = this.currentToolId;
+    action[3] = this.context.unit;
+    action[4] = this.currentToolId;
 
     return action;
   }
