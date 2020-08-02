@@ -1,33 +1,25 @@
+import Tool, {Drawing} from '@/modules/Tool';
 import {Context, Action} from '@/@types/global';
 import {ActionType} from '@/constants';
 import {IdGenerator} from '@/utils';
 
-type Drawing = (
-  ctx: CanvasRenderingContext2D,
-  pointX: number,
-  pointY: number,
-  unit: number,
-) => void;
-
-type DrawingMap = {
-  [drawingId: number]: {
-    [actionType: number]: Drawing
-  }
-};
+export type Tools = {
+  [toolId: number]: Tool,
+}
 
 export default class Painter {
-  private drawingMap: DrawingMap;
+  private tools: Tools;
   private context: Context;
 
   constructor(context: Context) {
     this.context = context;
-    this.drawingMap = {
-      [IdGenerator.hashStringToNumber('default')]: {
+    this.tools = {
+      [IdGenerator.hashStringToNumber('blackline')]: Tool.create({
         [ActionType.MouseDown]: this.defaultStartDrawing,
         [ActionType.MouseDownAndMove]: this.defaultMoveDrawing,
         [ActionType.MouseUp]: this.defaultEndDrawing,
         [ActionType.MouseOut]: this.defaultEndDrawing,
-      },
+      }),
     };
   }
 
@@ -35,8 +27,8 @@ export default class Painter {
     const actionType: number = action[0];
     const pointX: number = action[1];
     const pointY: number = action[2];
-    const drawingId: number = action[3];
-    const drawing: Drawing = this.drawingMap[drawingId] && this.drawingMap[drawingId][actionType];
+    const toolId: number = action[3];
+    const drawing: Drawing = this.tools[toolId] && this.tools[toolId].get(actionType);
 
     if (drawing) {
       drawing(
@@ -48,6 +40,12 @@ export default class Painter {
     }
   }
 
+  public addTool(toolName: string, tool: Tool) {
+    const toolId: number = IdGenerator.hashStringToNumber(toolName);
+
+    this.tools[toolId] = tool;
+  }
+
   private readonly defaultStartDrawing: Drawing = (
     ctx,
     pointX,
@@ -57,7 +55,7 @@ export default class Painter {
     ctx.beginPath();
     ctx.moveTo(pointX, pointY);
     ctx.lineJoin = 'round';
-    ctx.lineWidth = unit * 1;
+    ctx.lineWidth = 1;
     ctx.strokeStyle = '#000';
   }
 

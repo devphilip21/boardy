@@ -2,22 +2,32 @@ import {Context, Action} from '@/@types/global';
 import {EventChannel, IdGenerator} from '@/utils';
 import {ActionType} from '@/constants';
 
+type EventHandler = (e: Event) => void;
+
 export default class Trigger extends EventChannel<Action> {
   private context: Context;
-  private currentDrawingId: number;
+  private currentToolId: number;
   private isMouseDown: boolean;
+  private toolId: { [toolName: string]: number };
 
   constructor(context: Context) {
     super();
 
+    this.toolId = {
+      behavior: IdGenerator.hashStringToNumber('behavior'),
+    };
     this.context = context;
-    this.currentDrawingId = IdGenerator.hashStringToNumber('default');
+    this.currentToolId = this.toolId.behavior;
     this.addCanvasEventListeners();
     this.isMouseDown = false;
   }
 
-  public setDrawingType(drawingType: string) {
-    this.currentDrawingId = IdGenerator.hashStringToNumber(drawingType);
+  public setTool(toolName: string) {
+    if (!this.toolId[toolName]) {
+      this.toolId[toolName] = IdGenerator.hashStringToNumber(toolName);
+    }
+
+    this.currentToolId = this.toolId[toolName];
   }
 
   public destroy() {
@@ -48,38 +58,47 @@ export default class Trigger extends EventChannel<Action> {
     action[0] = actionType;
     action[1] = e.offsetX;
     action[2] = e.offsetY;
-    action[3] = this.currentDrawingId;
+    action[3] = this.currentToolId;
 
     return action;
   }
 
-  private readonly handleMouseDown = (e: MouseEvent) => {
+  private readonly handleCommon = (handler: EventHandler): EventHandler => {
+    return (e) => {
+      if (this.currentToolId === this.toolId.behavior) {
+        return;
+      }
+      handler(e);
+    };
+  }
+
+  private readonly handleMouseDown = this.handleCommon((e: MouseEvent) => {
     const action: Action = this.createMouseAction(e, ActionType.MouseDown);
 
     this.emit(action);
     this.isMouseDown = true;
-  }
+  })
 
-  private readonly handleMouseUp = (e: MouseEvent) => {
+  private readonly handleMouseUp = this.handleCommon((e: MouseEvent) => {
     const action: Action = this.createMouseAction(e, ActionType.MouseUp);
 
     this.emit(action);
     this.isMouseDown = false;
-  }
+  })
 
-  private readonly handleMouseOut = (e: MouseEvent) => {
+  private readonly handleMouseOut = this.handleCommon((e: MouseEvent) => {
     const action: Action = this.createMouseAction(e, ActionType.MouseOut);
 
     this.emit(action);
     this.isMouseDown = false;
-  }
+  })
 
-  private readonly handleMouseMove = (e: MouseEvent) => {
+  private readonly handleMouseMove = this.handleCommon((e: MouseEvent) => {
     const actionType: ActionType = this.isMouseDown ?
       ActionType.MouseDownAndMove :
       ActionType.MouseMove;
     const action: Action = this.createMouseAction(e, actionType);
 
     this.emit(action);
-  }
+  })
 }

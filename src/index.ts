@@ -3,6 +3,7 @@ import Renderer from './modules/Renderer';
 import {Context, Action} from './@types/global';
 import Painter from '@/modules/Painter';
 import Rasterizer from './modules/Rasterizer';
+import Tool from './modules/Tool';
 
 type IntializeOptions = {
   canvas?: HTMLCanvasElement,
@@ -18,6 +19,7 @@ type IntializeOptions = {
  */
 export default class Boardy {
   private context: Context;
+  private painter: Painter;
   private renderer: Renderer;
   private trigger: Trigger;
 
@@ -29,9 +31,12 @@ export default class Boardy {
     // global context of all modules.
     this.context = this.initalizeContext(options);
 
+    // manage drawing tools
+    this.painter = options.painter || new Painter(this.context);
+
     // dispatcher role in flux architecture.
     this.renderer = new Renderer(
-      options.painter || new Painter(this.context),
+      this.painter,
       new Rasterizer(this.context),
     );
 
@@ -45,6 +50,14 @@ export default class Boardy {
 
   public render(action: Action) {
     this.renderer.render(action);
+  }
+
+  public addTool(toolName: string, tool: Tool) {
+    this.painter.addTool(toolName, tool);
+  }
+
+  public useTool(toolName: string) {
+    this.trigger.setTool(toolName);
   }
 
   /**
