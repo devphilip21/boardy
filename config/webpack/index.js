@@ -8,13 +8,12 @@ const configPlugins = require('./plugins');
  * @param {string} mode
  * @return {any} config
  */
-module.exports = (mode) => {
-  const isDev = mode === 'development';
+module.exports = (mode, example) => {
   const config = {
-    ...configBase(mode, isDev),
-    ...configDevServer(mode, isDev),
-    ...configModule(mode, isDev),
-    ...configPlugins(mode, isDev),
+    ...configBase(mode, example),
+    ...configDevServer(mode),
+    ...configModule(mode),
+    ...configPlugins(mode, example),
   };
 
   return config;
