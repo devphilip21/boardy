@@ -3,11 +3,9 @@ const exampleAbbreviation = {
   rtc: 'real-time-communication',
 }
 
-module.exports = (_, { v }) =>{
-  const argv = Array.isArray(v) ? v : [v];
-  const args = argv.map(str => str.split('=').map(keyValue => keyValue.trim()));
-  const exampleArg = args.find(([key]) => key === '.example');
-  const exampleStr = exampleArg ? exampleArg[1] : 'simple';
+module.exports = () =>{
+  const exampleArg = process.env.example;
+  const exampleStr = exampleArg || 'simple';
   const example = exampleAbbreviation[exampleStr] || exampleStr;
 
   console.log(`[[ Example ]]\n  - ${example}\n`);

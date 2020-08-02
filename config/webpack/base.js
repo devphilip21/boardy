@@ -1,18 +1,24 @@
 const Path = require('path');
 const PackageJson = require('../../package.json');
 
-module.exports = (mode, isDev, example) => {
+module.exports = (mode, example) => {
+  const isDev = mode === 'development';
+  const isExample = mode === 'example';
+
   const {version} = PackageJson;
-  const entry = isDev ?
+  const entry = (isDev || isExample) ?
     Path.resolve(__dirname, `../../examples/${example}/index.ts`) :
     Path.resolve(__dirname, '../../src/index.ts');
-  const output = {
+  const output = (isDev || isExample) ? {
+    path: Path.resolve(__dirname, '../../docs/examples'),
+    filename: `${example}.min.js`,
+  } : {
     path: Path.resolve(__dirname, '../../dist'),
     filename: `boardy-${version}.min.js`,
   };
 
   return {
-    mode,
+    mode: isExample ? 'production' : mode,
     entry,
     output,
   };

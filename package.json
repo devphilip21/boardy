@@ -4,7 +4,12 @@
   "description": "responsive, persist, reactive drawing tools on web browser",
   "main": "src/index.ts",
   "scripts": {
+    "<< COMMENT_1 >>": "example=[example name(dirname)] yarn start",
+    "<< COMMENT_2 >>": "ex) example=simple yarn start",
     "start": "NODE_ENV=development webpack-dev-server",
+    "<< COMMENT_3 >>": "example=[example name(dirname)] yarn build:example",
+    "<< COMMENT_4 >>": "ex) example=simple yarn build:example",
+    "build:example": "NODE_ENV=example webpack",
     "build": "NODE_ENV=production webpack"
   },
   "repository": {
