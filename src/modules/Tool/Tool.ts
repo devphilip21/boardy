@@ -18,15 +18,49 @@ export default class Tool {
     this.drawingMap = drawingMap || {};
   }
 
-  public set(actionType: ActionType, drawing: Drawing) {
+  public set(actionType: ActionType, drawing: Drawing): void {
     this.drawingMap[actionType] = drawing;
   }
 
-  public get(actionType: ActionType) {
+  public get(actionType: ActionType): Drawing {
     return this.drawingMap[actionType];
+  }
+
+  public getActionTypes(): number[] {
+    const keys: string[] = Object.keys(this.drawingMap);
+    const actionTypes: number[] = [];
+
+    keys.forEach((key) => {
+      const actionType: number = Number.parseInt(key, 10);
+
+      if (!Number.isNaN(actionType)) {
+        actionTypes.push(actionType);
+      }
+    });
+
+    return actionTypes;
   }
 
   static create(drawingMap: DrawingMap): Tool {
     return new Tool(drawingMap);
+  }
+
+  static extend(parentTools: Tool, childDrawingMap: DrawingMap): Tool {
+    const curried: DrawingMap = {...childDrawingMap};
+
+    parentTools.getActionTypes().forEach((actionType: number) => {
+      const drawingOfParent: Drawing = parentTools.get(actionType);
+      const drawingOfChild: Drawing = curried[actionType];
+      const curriedDrawing: Drawing = !drawingOfChild ?
+        drawingOfParent :
+        (...args) => {
+          drawingOfParent(...args);
+          drawingOfChild(...args);
+        };
+
+      curried[actionType] = curriedDrawing;
+    });
+
+    return new Tool(curried);
   }
 }
