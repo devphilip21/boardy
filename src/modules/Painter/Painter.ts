@@ -2,6 +2,7 @@ import Tool, {Drawing} from '@/modules/Tool';
 import {Context, Action} from '@/@types/global';
 import {ActionType} from '@/constants';
 import {IdGenerator} from '@/utils';
+import * as tools from './tools';
 
 export type Tools = {
   [toolId: number]: Tool,
@@ -14,12 +15,7 @@ export default class Painter {
   constructor(context: Context) {
     this.context = context;
     this.tools = {
-      [IdGenerator.hashStringToNumber('blackline')]: Tool.create({
-        [ActionType.MouseDown]: this.defaultStartDrawing,
-        [ActionType.MouseDownAndMove]: this.defaultMoveDrawing,
-        [ActionType.MouseUp]: this.defaultEndDrawing,
-        [ActionType.MouseOut]: this.defaultEndDrawing,
-      }),
+      [IdGenerator.hashStringToNumber('blackline')]: tools.blackline,
     };
   }
 
@@ -44,31 +40,5 @@ export default class Painter {
     const toolId: number = IdGenerator.hashStringToNumber(toolName);
 
     this.tools[toolId] = tool;
-  }
-
-  private readonly defaultStartDrawing: Drawing = (
-    ctx,
-    pointX,
-    pointY,
-    unit,
-  ) => {
-    ctx.beginPath();
-    ctx.moveTo(pointX, pointY);
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = '#000';
-  }
-
-  private readonly defaultMoveDrawing: Drawing = (
-    ctx,
-    pointX,
-    pointY,
-  ) => {
-    ctx.lineTo(pointX, pointY);
-    ctx.stroke();
-  }
-
-  private readonly defaultEndDrawing: Drawing = (ctx) => {
-    ctx.closePath();
   }
 }

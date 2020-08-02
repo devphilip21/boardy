@@ -56,8 +56,8 @@ export default class Trigger extends EventChannel<Action> {
     const action: Action = Uint32Array ? new Uint32Array(4) : ([] as any);
 
     action[0] = actionType;
-    action[1] = e.offsetX;
-    action[2] = e.offsetY;
+    action[1] = e.offsetX * this.context.unit;
+    action[2] = e.offsetY * this.context.unit;
     action[3] = this.currentToolId;
 
     return action;
