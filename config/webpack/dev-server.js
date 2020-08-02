@@ -1,4 +1,6 @@
-module.exports = (_, isDev) => {
+module.exports = (mode) => {
+  const isDev = mode === 'development';
+  
   if (isDev) {
     return {
       devServer: {

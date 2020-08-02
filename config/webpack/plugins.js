@@ -2,22 +2,27 @@ const Path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = (_, isDev, example) => {
-  if (isDev) {
-    return {
-      plugins: [
-        new HtmlWebpackPlugin({
-          template: Path.resolve(__dirname, `../../examples/${example}/index.html`),
-        }),
-      ],
-    };
+module.exports = (mode, example) => {
+  const config = {};
+  const isDev = mode === 'development';
+  const isExample = mode === 'example';
+
+  if (isDev || isExample) {
+    config.plugins = [
+      new HtmlWebpackPlugin({
+        filename: `${example}.html`,
+        template: Path.resolve(__dirname, `../../examples/${example}/index.html`),
+      }),
+    ];
   }
 
-  return {
-    optimization: {
+  if (!isDev) {
+    config.optimization = {
       minimizer: [
         new UglifyJsPlugin(),
       ],
-    },
-  };
+    }
+  }
+  
+  return config;
 };
