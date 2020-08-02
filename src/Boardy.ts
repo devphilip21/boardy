@@ -4,6 +4,7 @@ import {Context, Action} from './@types/global';
 import Painter from '@/modules/Painter';
 import Rasterizer from './modules/Rasterizer';
 import Tool from './modules/Tool';
+import {ActionType} from './constants';
 
 type IntializeOptions = {
   canvas?: HTMLCanvasElement,
@@ -119,4 +120,9 @@ export default class Boardy {
 
     return unit;
   }
+
+  static Tool = Tool;
+  static ActionType = ActionType;
 }
+
+export {ActionType} from './constants';
