@@ -10,10 +10,10 @@ module.exports = () => {
     .map((str) => str.trim())
     .filter((str) => str);
 
-  console.log(`[[ Supported Browsers ]]`);
-  browsers.forEach((browser) => {
-    console.log(`  - ${browser}`);
-  });
+  const logBrowsers = `${browsers.map(browser => `  - ${browser}`).join('\n')}`;
+  const logMessage = `[[ Supported Browsers ]]\n${logBrowsers}\n`;
+
+  console.log(logMessage);
 
   return {
     resolve: {

@@ -17,6 +17,8 @@ module.exports = (mode, example) => {
     filename: `boardy-${version}.min.js`,
   };
 
+  console.log(`[[ Path ]]\n  entry: ${entry}\n  output: ${output.path}\n  filename: ${output.filename}\n`)
+
   return {
     mode: isExample ? 'production' : mode,
     entry,
