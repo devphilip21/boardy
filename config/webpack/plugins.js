@@ -7,7 +7,13 @@ module.exports = (mode, example) => {
   const isDev = mode === 'development';
   const isExample = mode === 'example';
 
-  if (isDev || isExample) {
+  if (isDev) {
+    config.plugins = [
+      new HtmlWebpackPlugin({
+        template: Path.resolve(__dirname, `../../examples/${example}/index.html`),
+      }),
+    ];
+  } else if (isExample) {
     config.plugins = [
       new HtmlWebpackPlugin({
         filename: `${example}.html`,

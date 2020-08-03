@@ -7,9 +7,9 @@ export type Context = {
     screen: CanvasRenderingContext2D,
     offscreen: CanvasRenderingContext2D,
   },
-  size: [number, number],
-  resolution: [number, number],
-  unit: number
+  size: [number, number], // width, height
+  resolution: [number, number], // width, height
+  unit: [number, number, number] // width, height, contents
 }
 
 /**
