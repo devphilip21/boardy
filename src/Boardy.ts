@@ -33,6 +33,7 @@ export default class Boardy {
 
     // global context of all modules.
     this.context = this.initalizeContext(options);
+    this.context.ctx.offscreen.boardy = {};
 
     // manage drawing tools
     this.painter = options.painter || new Painter(this.context);
