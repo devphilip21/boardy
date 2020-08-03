@@ -36,7 +36,10 @@ export default class Renderer {
   }
 
   private readonly animate = () => {
-    this.actionQueue.forEach((action) => this.painter.paint(action));
+    this.actionQueue.forEach((action) => {
+      if (!action) return;
+      this.painter.paint(action);
+    });
     this.actionQueue = [];
     this.rasterizer.rasterize();
     if (this.flag) {
