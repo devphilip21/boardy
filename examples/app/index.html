@@ -17,9 +17,9 @@
     .sub-title {display:block;font-size:18px;padding:7px 4px;}
     .comment {display:block;font-size:15px;padding:0 14px;color:#777;}
     .screen-leader .content::after {content:'';display:block;clear:both;}
-    .screen-leader .pallete {float:left;width:110px;padding:15px;}
+    .screen-leader .pallete {float:left;width:140px;padding:15px;}
     .screen-leader .frame {float:left;width:400px;height:200px;}
-    .pallete .tool {height:32px;font-size:0px;border:1px solid #777;
+    .pallete .tool {position:relative;height:32px;font-size:0px;border:1px solid #777;
       border-radius:3px;background-color:#fff;}
     .pallete .tool+.tool {margin-top:4px;}
     .pallete .tool.is-selected {border: 2px solid rgb(35, 61, 179)}
@@ -27,7 +27,8 @@
     .pallete .tool-pen::before {content:'';display:inline-block;height:100%;vertical-align:middle;}
     .pallete .tool-pen span {display:inline-block;height:32px;padding:0 32px 0 14px;
       line-height:32px;font-size:15px;vertical-align:middle;}
-    .pallete .tool-pen input[type="color"] {width:28px;height:28px;vertical-align:middle;}
+    .pallete .tool-pen input[type="color"] {position:absolute;top:2px;right:5px;
+      width:28px;height:28px;vertical-align:middle;}
     .pallete .tool-eraser button {width:100%;padding:0 14px;font-size:15px;}
   </style>
 </head>
@@ -42,6 +43,10 @@
         <div class="tool tool-pen">
           <span>Pen</span>
           <input id="inp-pen" type="color" class="inp-pen">
+        </div>
+        <div class="tool tool-pen">
+          <span>Crayon</span>
+          <input id="inp-crayon" type="color" class="inp-pen">
         </div>
         <div class="tool tool-eraser">
           <button id="btn-eraser" type="button">Eraser</button>

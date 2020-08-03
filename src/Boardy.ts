@@ -1,10 +1,11 @@
-import Trigger from './modules/Trigger';
-import Renderer from './modules/Renderer';
-import {Context, Action} from './@types/global';
+import Trigger from '@/modules/Trigger';
+import Renderer from '@/modules/Renderer';
 import Painter from '@/modules/Painter';
-import Rasterizer from './modules/Rasterizer';
-import Tool from './modules/Tool';
-import {ActionType} from './constants';
+import Rasterizer from '@/modules/Rasterizer';
+import Tool from '@/modules/Tool';
+import {Context, Action} from '@/@types/global';
+import {ActionType} from '@/constants';
+import {ResizeObserver} from '@/utils';
 
 type IntializeOptions = {
   canvas?: HTMLCanvasElement,
@@ -23,6 +24,7 @@ export default class Boardy {
   private painter: Painter;
   private renderer: Renderer;
   private trigger: Trigger;
+  private resizeObserver: ResizeObserver;
 
   constructor(options: IntializeOptions) {
     if (!options.canvas) {
@@ -31,6 +33,7 @@ export default class Boardy {
 
     // global context of all modules.
     this.context = this.initalizeContext(options);
+    this.context.ctx.offscreen.boardy = {};
 
     // manage drawing tools
     this.painter = options.painter || new Painter(this.context);
@@ -43,6 +46,12 @@ export default class Boardy {
 
     // trigger events (ex. mouse event)
     this.trigger = new Trigger(this.context);
+
+    // on resize
+    this.resizeObserver = new ResizeObserver(this.context.canvas.screen, {
+      debounceTime: 300,
+    });
+    this.resizeObserver.on(this.handleResize);
   }
 
   public on(handler: (action: Action) => void) {
@@ -69,13 +78,12 @@ export default class Boardy {
   private initalizeContext(options?: IntializeOptions): Context {
     const screenElement: HTMLCanvasElement = options.canvas;
     const offscreenElement: HTMLCanvasElement = document.createElement('canvas');
-    const size: [number, number] = [
-      screenElement.offsetWidth,
-      screenElement.offsetHeight,
-    ] || [500, 500];
+    const size: [number, number] = this.intializeSize(options);
     const resolution: [number, number] = this.initializeResolution(options, size);
-    const unit: number = this.calculateUnit(size, resolution);
+    const unit: [number, number, number] = this.calculateUnit(size, resolution);
 
+    screenElement.width = size[0];
+    screenElement.height = size[1];
     offscreenElement.width = resolution[0];
     offscreenElement.height = resolution[1];
 
@@ -92,6 +100,15 @@ export default class Boardy {
       resolution,
       unit,
     };
+  }
+
+  private intializeSize(options: IntializeOptions): [number, number] {
+    const size: [number, number] = [
+      options.canvas.offsetWidth,
+      options.canvas.offsetHeight,
+    ] || [500, 500];
+
+    return size;
   }
 
   private initializeResolution(
@@ -113,12 +130,32 @@ export default class Boardy {
     return resolution;
   }
 
-  private calculateUnit(size: [number, number], resolution: [number, number]): number {
-    const unit: number = size[0] > size[1] ?
-      resolution[1] / size[1] :
-      resolution[0] / size[0];
+  private calculateUnit(
+    size: [number, number],
+    resolution: [number, number],
+  ): [number, number, number] {
+    const unit: [number, number, number] = [0, 0, 0];
+
+    unit[0] = resolution[0] / size[0];
+    unit[1] = resolution[1] / size[1];
+    unit[2] = size[0] > size[1] ? unit[1] : unit[0];
 
     return unit;
+  }
+
+  private readonly handleResize = ({width, height}) => {
+    const nextUnit = this.calculateUnit(
+      [width, height],
+      [this.context.resolution[0], this.context.resolution[1]],
+    );
+
+    this.context.size[0] = width;
+    this.context.size[1] = height;
+    this.context.canvas.screen.width = width;
+    this.context.canvas.screen.height = height;
+    this.context.unit[0] = nextUnit[0];
+    this.context.unit[1] = nextUnit[1];
+    this.renderer.render(null);
   }
 
   static Tool = Tool;

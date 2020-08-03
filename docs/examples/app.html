@@ -9,9 +9,9 @@
     .sub-title {display:block;font-size:18px;padding:7px 4px;}
     .comment {display:block;font-size:15px;padding:0 14px;color:#777;}
     .screen-leader .content::after {content:'';display:block;clear:both;}
-    .screen-leader .pallete {float:left;width:110px;padding:15px;}
+    .screen-leader .pallete {float:left;width:140px;padding:15px;}
     .screen-leader .frame {float:left;width:400px;height:200px;}
-    .pallete .tool {height:32px;font-size:0px;border:1px solid #777;
+    .pallete .tool {position:relative;height:32px;font-size:0px;border:1px solid #777;
       border-radius:3px;background-color:#fff;}
     .pallete .tool+.tool {margin-top:4px;}
     .pallete .tool.is-selected {border: 2px solid rgb(35, 61, 179)}
@@ -19,5 +19,6 @@
     .pallete .tool-pen::before {content:'';display:inline-block;height:100%;vertical-align:middle;}
     .pallete .tool-pen span {display:inline-block;height:32px;padding:0 32px 0 14px;
       line-height:32px;font-size:15px;vertical-align:middle;}
-    .pallete .tool-pen input[type="color"] {width:28px;height:28px;vertical-align:middle;}
-    .pallete .tool-eraser button {width:100%;padding:0 14px;font-size:15px;}</style></head><body><div class="screen-leader"><h2 class="title">Leader Computer</h2><div class="content"><div class="frame"><canvas id="canvas-leader" width="400" height="200"></canvas></div><div class="pallete"><div class="tool tool-pen"><span>Pen</span> <input id="inp-pen" type="color" class="inp-pen"></div><div class="tool tool-eraser"><button id="btn-eraser" type="button">Eraser</button></div></div></div></div><div class="screen-members"><h2 class="title">Member Computers</h2><p class="comment">1. it is drawn at a constant resolution, without being affected by the screen size.</p><p class="comment">2. members and leaders exchange only 20 bytes, no image. => cool network performance.</p><div class="frame"><h3 class="sub-title">Greater Resolution</h3><canvas id="canvas-member-1" width="700" height="350"></canvas></div><div class="frame"><h3 class="sub-title">Smaller Resolution</h3><canvas id="canvas-member-2" width="200" height="100"></canvas></div></div><script src="app.min.js"></script></body></html>
+    .pallete .tool-pen input[type="color"] {position:absolute;top:2px;right:5px;
+      width:28px;height:28px;vertical-align:middle;}
+    .pallete .tool-eraser button {width:100%;padding:0 14px;font-size:15px;}</style></head><body><div class="screen-leader"><h2 class="title">Leader Computer</h2><div class="content"><div class="frame"><canvas id="canvas-leader" width="400" height="200"></canvas></div><div class="pallete"><div class="tool tool-pen"><span>Pen</span> <input id="inp-pen" type="color" class="inp-pen"></div><div class="tool tool-pen"><span>Crayon</span> <input id="inp-crayon" type="color" class="inp-pen"></div><div class="tool tool-eraser"><button id="btn-eraser" type="button">Eraser</button></div></div></div></div><div class="screen-members"><h2 class="title">Member Computers</h2><p class="comment">1. it is drawn at a constant resolution, without being affected by the screen size.</p><p class="comment">2. members and leaders exchange only 20 bytes, no image. => cool network performance.</p><div class="frame"><h3 class="sub-title">Greater Resolution</h3><canvas id="canvas-member-1" width="700" height="350"></canvas></div><div class="frame"><h3 class="sub-title">Smaller Resolution</h3><canvas id="canvas-member-2" width="200" height="100"></canvas></div></div><script src="app.min.js"></script></body></html>

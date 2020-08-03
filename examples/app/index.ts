@@ -55,6 +55,7 @@ socket.on((action) => {
 // create line tool (to use global color)
 //   - see example[add-tools] for details.
 let penColor = '#000';
+let crayonColor = '#000';
 const globalColorLine = Boardy.Tool.create({
   [ActionType.MouseDown]: (ctx, pointX, pointY, unit) => {
     ctx.beginPath();
@@ -79,12 +80,23 @@ const globalColorLine = Boardy.Tool.create({
     ctx.closePath();
   },
 });
+const globalColorCrayon = Boardy.Tool.extend(globalColorLine, {
+  [ActionType.MouseDown]: (ctx, _, __, unit) => {
+    ctx.strokeStyle = ctx.boardy.createCrayonPattern(crayonColor);
+    ctx.lineCap = 'round';
+    ctx.lineWidth = unit * 10;
+  },
+});
 const lineToolName = 'globalColorLine';
+const crayonToolName = 'globalColorCrayon';
 
 (function initTool() {
   leader.addTool(lineToolName, globalColorLine);
+  leader.addTool(crayonToolName, globalColorCrayon);
   firstMember.addTool(lineToolName, globalColorLine);
+  firstMember.addTool(crayonToolName, globalColorCrayon);
   secondMember.addTool(lineToolName, globalColorLine);
+  secondMember.addTool(crayonToolName, globalColorCrayon);
   allClientsUseTool(lineToolName);
 })();
 
@@ -94,6 +106,7 @@ const lineToolName = 'globalColorLine';
 
 const toolSelectElements = [
   document.querySelector('#inp-pen'),
+  document.querySelector('#inp-crayon'),
   document.querySelector('#btn-eraser'),
 ];
 
@@ -105,7 +118,13 @@ toolSelectElements[0].addEventListener('input', (e: any) => {
   highlightTool(0);
 });
 
-toolSelectElements[1].addEventListener('click', (e: any) => {
+toolSelectElements[1].addEventListener('input', (e: any) => {
+  crayonColor = e.target.value;
+  allClientsUseTool(crayonToolName);
+  highlightTool(1);
+});
+
+toolSelectElements[2].addEventListener('click', (e: any) => {
   allClientsUseTool('eraser');
   highlightTool(1);
 });
