@@ -5,7 +5,7 @@ export default Tool.create({
   [ActionType.MouseDown]: (ctx) => {
     ctx.globalCompositeOperation = 'destination-out';
   },
-  [ActionType.MouseDownAndMove]: (
+  [ActionType.Drag]: (
     ctx,
     pointX,
     pointY,
