@@ -1,5 +1,7 @@
 /* eslint-disable spaced-comment */
 import Boardy, {ActionType} from '@/Boardy';
+import blackline from '@/modules/Painter/tools/blackline';
+import {Drawing} from '@/modules/Tool';
 
 /////////////////////////////////////
 /////////// Server //////////////////
@@ -54,49 +56,30 @@ socket.on((action) => {
 
 // create line tool (to use global color)
 //   - see example[add-tools] for details.
+//   - see example[extend-tools] for details.
 let penColor = '#000';
-let crayonColor = '#000';
-const globalColorLine = Boardy.Tool.create({
-  [ActionType.MouseDown]: (ctx, pointX, pointY, unit) => {
-    ctx.beginPath();
-    ctx.moveTo(pointX, pointY);
-    ctx.lineJoin = 'round';
-    // if you want to set it to 1px,
-    // use 1 * unit (multiply unit).
-    // it will be drawn in 1px that can correspond to various resolutions
-    ctx.lineWidth = 2 * unit;
-    ctx.strokeStyle = penColor;
-  },
-  // if mouse down and move, call lineTo and stroke.
-  [ActionType.MouseDownAndMove]: (ctx, pointX, pointY) => {
-    ctx.lineTo(pointX, pointY);
-    ctx.stroke();
-  },
-  // if mouse up or out, close path.
-  [ActionType.MouseUp]: (ctx) => {
-    ctx.closePath();
-  },
-  [ActionType.MouseOut]: (ctx) => {
-    ctx.closePath();
-  },
+
+/**
+ * line using global color
+ */
+const startLine: Drawing = (ctx, pointX, pointY, unit) => {
+  ctx.strokeStyle = penColor;
+  ctx.lineWidth = 3 * unit;
+};
+const globalColorLine = Boardy.Tool.extend(blackline, {
+  [ActionType.MouseDown]: startLine,
+  [ActionType.DragIn]: startLine,
 });
-const globalColorCrayon = Boardy.Tool.extend(globalColorLine, {
-  [ActionType.MouseDown]: (ctx, _, __, unit) => {
-    ctx.strokeStyle = ctx.boardy.createCrayonPattern(crayonColor);
-    ctx.lineCap = 'round';
-    ctx.lineWidth = unit * 10;
-  },
-});
+
+/**
+ * wave using global color
+ */
 const lineToolName = 'globalColorLine';
-const crayonToolName = 'globalColorCrayon';
 
 (function initTool() {
   leader.addTool(lineToolName, globalColorLine);
-  leader.addTool(crayonToolName, globalColorCrayon);
   firstMember.addTool(lineToolName, globalColorLine);
-  firstMember.addTool(crayonToolName, globalColorCrayon);
   secondMember.addTool(lineToolName, globalColorLine);
-  secondMember.addTool(crayonToolName, globalColorCrayon);
   allClientsUseTool(lineToolName);
 })();
 
@@ -106,7 +89,6 @@ const crayonToolName = 'globalColorCrayon';
 
 const toolSelectElements = [
   document.querySelector('#inp-pen'),
-  document.querySelector('#inp-crayon'),
   document.querySelector('#btn-eraser'),
 ];
 
@@ -118,13 +100,7 @@ toolSelectElements[0].addEventListener('input', (e: any) => {
   highlightTool(0);
 });
 
-toolSelectElements[1].addEventListener('input', (e: any) => {
-  crayonColor = e.target.value;
-  allClientsUseTool(crayonToolName);
-  highlightTool(1);
-});
-
-toolSelectElements[2].addEventListener('click', (e: any) => {
+toolSelectElements[1].addEventListener('click', () => {
   allClientsUseTool('eraser');
   highlightTool(1);
 });
