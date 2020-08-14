@@ -62,7 +62,7 @@ let penColor = '#000';
 /**
  * line using global color
  */
-const startLine: Drawing = (ctx, pointX, pointY, unit) => {
+const startLine: Drawing = (ctx, {unit}) => {
   ctx.strokeStyle = penColor;
   ctx.lineWidth = 3 * unit;
 };

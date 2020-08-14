@@ -4,19 +4,19 @@ import {ActionType} from '@/constants';
 /**
  * Drawing Functions
  */
-const startLine: Drawing = (ctx, pointX, pointY, unit) => {
+const startLine: Drawing = (ctx, {pointX, pointY, unit}) => {
   ctx.beginPath();
   ctx.moveTo(pointX, pointY);
   ctx.lineJoin = 'round';
   ctx.lineWidth = 1 * unit;
   ctx.strokeStyle = '#000';
 };
-const drawLine: Drawing = (ctx, pointX, pointY) => {
+const drawLine: Drawing = (ctx, {pointX, pointY}) => {
   ctx.lineTo(pointX, pointY);
   ctx.stroke();
 };
-const endLine: Drawing = (ctx, pointX, pointY, unit) => {
-  drawLine(ctx, pointX, pointY, unit);
+const endLine: Drawing = (ctx, values) => {
+  drawLine(ctx, values);
   ctx.closePath();
 };
 
