@@ -40,7 +40,7 @@ const createCrayonTexture = (unit: number): HTMLCanvasElement => {
 /**
  * DrawingFunctions
  */
-const setCrayonLineStyle: Drawing = (ctx, _, __, unit) => {
+const setCrayonLineStyle: Drawing = (ctx, {unit}) => {
   const texture: HTMLCanvasElement = createCrayonTexture(unit);
 
   ctx.strokeStyle = ctx.createPattern(texture, 'repeat');

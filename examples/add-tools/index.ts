@@ -14,11 +14,13 @@ boardy.on((action) => {
 //     - actionType: declared in Boardy.ActionType
 //     - DrawingFunction: (
 //         ctx: CanvasContext,
-//         pointX: CoordinateX,
-//         pointY: CoordinateY,
-//         unit: OnePixelByResolution
+//         values: {
+//           pointX: CoordinateX,
+//           pointY: CoordinateY,
+//           unit: OnePixelByResolution
+//         }
 //       ) => void
-const startRedLine: Drawing = (ctx, pointX, pointY, unit) => {
+const startRedLine: Drawing = (ctx, {pointX, pointY, unit}) => {
   ctx.beginPath();
   ctx.moveTo(pointX, pointY);
   ctx.lineJoin = 'round';
@@ -28,7 +30,7 @@ const startRedLine: Drawing = (ctx, pointX, pointY, unit) => {
   ctx.lineWidth = 2 * unit;
   ctx.strokeStyle = '#f00';
 };
-const drawRedLine: Drawing = (ctx, pointX, pointY) => {
+const drawRedLine: Drawing = (ctx, {pointX, pointY}) => {
   ctx.lineTo(pointX, pointY);
   ctx.stroke();
 };

@@ -11,14 +11,14 @@ boardy.on((action) => {
 
 // 1. maybe parent tool exist.
 //   - see example[add-tools] for details.
-const startRedLine: Drawing = (ctx, pointX, pointY, unit) => {
+const startRedLine: Drawing = (ctx, {pointX, pointY, unit}) => {
   ctx.beginPath();
   ctx.moveTo(pointX, pointY);
   ctx.lineJoin = 'round';
   ctx.lineWidth = 2 * unit;
   ctx.strokeStyle = '#f00';
 };
-const drawRedLine: Drawing = (ctx, pointX, pointY) => {
+const drawRedLine: Drawing = (ctx, {pointX, pointY}) => {
   ctx.lineTo(pointX, pointY);
   ctx.stroke();
 };
@@ -45,7 +45,7 @@ const redLine = Boardy.Tool.create({
 //         pointY: CoordinateY,
 //         unit: OnePixelByResolution
 //       ) => void
-const startThickRedLine = (ctx, pointX, pointY, unit) => {
+const startThickRedLine = (ctx, {unit}) => {
   ctx.lineWidth = 10 * unit;
 };
 const thickRedLine = Boardy.Tool.extend(redLine, {

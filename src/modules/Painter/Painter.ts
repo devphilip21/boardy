@@ -32,9 +32,11 @@ export default class Painter {
     if (drawing) {
       drawing(
         this.context.ctx.offscreen,
-        pointX,
-        pointY,
-        unit,
+        {
+          pointX,
+          pointY,
+          unit,
+        },
       );
     }
   }
