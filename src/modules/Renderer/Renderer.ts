@@ -9,7 +9,7 @@ export default class Renderer {
   private painter: Painter;
   private rasterizer: Rasterizer;
   private actionQueue: Action[];
-  private flag: boolean;
+  private isRunning: boolean;
 
   constructor(
     painter: Painter,
@@ -18,32 +18,34 @@ export default class Renderer {
     this.painter = painter;
     this.rasterizer = rasterizer;
     this.actionQueue = [];
-    this.flag = false;
-    this.startLoop();
+    this.isRunning = false;
   }
 
   public render(action: Action): void {
-    this.actionQueue.push(action);
-  }
-
-  public startLoop() {
-    this.flag = true;
-    window.requestAnimationFrame(this.animate);
-  }
-
-  public stopLoop() {
-    this.flag = false;
+    this.actionQueue.unshift(action);
+    if (!this.isRunning) {
+      window.requestAnimationFrame(this.animate);
+    }
   }
 
   private readonly animate = () => {
-    this.actionQueue.forEach((action) => {
-      if (!action) return;
-      this.painter.paint(action);
-    });
-    this.actionQueue = [];
-    this.rasterizer.rasterize();
-    if (this.flag) {
-      window.requestAnimationFrame(this.animate);
+    // if actionQueue is empty, stop animation
+    if (this.actionQueue.length === 0) {
+      this.isRunning = false;
+      return;
     }
+
+    // do animation
+    while (this.actionQueue.length > 0) {
+      const action = this.actionQueue.pop();
+
+      if (action) {
+        this.painter.paint(action);
+      }
+    }
+    this.rasterizer.rasterize();
+
+    // next vsync tick
+    window.requestAnimationFrame(this.animate);
   }
 }
