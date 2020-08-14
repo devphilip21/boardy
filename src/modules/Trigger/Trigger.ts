@@ -74,9 +74,9 @@ export default class Trigger extends EventChannel<Action> {
     const action: Action = Uint32Array ? new Uint32Array(5) : ([] as any);
 
     action[0] = actionType;
-    action[1] = this.checkPointXOverflow(pointX) * this.context.unit[0];
-    action[2] = this.checkPointYOverflow(pointY) * this.context.unit[1];
-    action[3] = this.context.unit[2];
+    action[1] = this.checkPointXOverflow(pointX) * this.context.unit.width;
+    action[2] = this.checkPointYOverflow(pointY) * this.context.unit.height;
+    action[3] = this.context.unit.contents;
     action[4] = this.currentToolId;
 
     return action;
@@ -85,8 +85,8 @@ export default class Trigger extends EventChannel<Action> {
   private checkPointXOverflow(offsetX: number): number {
     if (offsetX < 0) {
       offsetX = 0;
-    } else if (offsetX > this.context.size[0]) {
-      offsetX = this.context.size[0];
+    } else if (offsetX > this.context.size.width) {
+      offsetX = this.context.size.width;
     }
 
     return offsetX;
@@ -95,8 +95,8 @@ export default class Trigger extends EventChannel<Action> {
   private checkPointYOverflow(offsetY: number): number {
     if (offsetY < 0) {
       offsetY = 0;
-    } else if (offsetY > this.context.size[1]) {
-      offsetY = this.context.size[1];
+    } else if (offsetY > this.context.size.height) {
+      offsetY = this.context.size.height;
     }
 
     return offsetY;

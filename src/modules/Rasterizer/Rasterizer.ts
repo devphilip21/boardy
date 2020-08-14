@@ -14,12 +14,12 @@ export default class Rasterizer {
       this.context.canvas.offscreen,
       0,
       0,
-      this.context.resolution[0],
-      this.context.resolution[1],
+      this.context.resolution.width,
+      this.context.resolution.height,
       0,
       0,
-      this.context.size[0],
-      this.context.size[1],
+      this.context.size.width,
+      this.context.size.height,
     );
   }
 
@@ -27,8 +27,8 @@ export default class Rasterizer {
     this.context.ctx.screen.clearRect(
       0,
       0,
-      this.context.resolution[0],
-      this.context.resolution[1],
+      this.context.resolution.width,
+      this.context.resolution.height,
     );
   }
 }

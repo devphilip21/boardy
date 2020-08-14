@@ -1,15 +1,35 @@
+export type ContextCanvas = {
+  screen: HTMLCanvasElement,
+  offscreen: HTMLCanvasElement,
+}
+
+export type ContextCtx = {
+  screen: CanvasRenderingContext2D,
+  offscreen: CanvasRenderingContext2D,
+}
+
+export type ContextSize = {
+  width: number,
+  height: number,
+}
+
+export type ContextResolution = {
+  width: number,
+  height: number,
+}
+
+export type ContextUnit = {
+  width: number,
+  height: number,
+  contents: number,
+}
+
 export type Context = {
-  canvas: {
-    screen: HTMLCanvasElement,
-    offscreen: HTMLCanvasElement,
-  },
-  ctx: {
-    screen: CanvasRenderingContext2D,
-    offscreen: CanvasRenderingContext2D,
-  },
-  size: [number, number], // width, height
-  resolution: [number, number], // width, height
-  unit: [number, number, number] // width, height, contents
+  canvas: ContextCanvas,
+  ctx: ContextCtx,
+  size: ContextSize,
+  resolution: ContextResolution,
+  unit: ContextUnit,
 }
 
 /**
