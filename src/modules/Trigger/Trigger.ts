@@ -1,4 +1,4 @@
-import {Context, Action} from '@/@types/global';
+import {Context, Action} from '@/@types/base';
 import {EventChannel, IdGenerator} from '@/utils';
 import {ActionType} from '@/constants';
 

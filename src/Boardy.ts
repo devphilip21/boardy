@@ -3,7 +3,7 @@ import Renderer from '@/modules/Renderer';
 import Painter from '@/modules/Painter';
 import Rasterizer from '@/modules/Rasterizer';
 import Tool from '@/modules/Tool';
-import {Context, Action} from '@/@types/global';
+import {Context, Action} from '@/@types/base';
 import {ActionType} from '@/constants';
 import {ResizeObserver} from '@/utils';
 
@@ -33,7 +33,6 @@ export default class Boardy {
 
     // global context of all modules.
     this.context = this.initalizeContext(options);
-    this.context.ctx.offscreen.boardy = {};
 
     // manage drawing tools
     this.painter = options.painter || new Painter(this.context);
