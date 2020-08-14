@@ -1,5 +1,5 @@
 import Tool, {Drawing} from '@/modules/Tool';
-import {Context, Action} from '@/@types/global';
+import {Context, Action} from '@/@types/base';
 import {IdGenerator} from '@/utils';
 import * as tools from './tools';
 

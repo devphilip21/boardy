@@ -12,7 +12,7 @@ export default Tool.create({
     unit,
   ) => {
     ctx.beginPath();
-    ctx.arc(pointX, pointY, unit * 10, 0, Math.PI*2, false);
+    ctx.arc(pointX, pointY, unit * 20, 0, Math.PI*2, false);
     ctx.fill();
     ctx.closePath();
   },

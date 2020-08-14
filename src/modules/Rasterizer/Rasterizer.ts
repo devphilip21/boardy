@@ -1,4 +1,4 @@
-import {Context} from '@/@types/global';
+import {Context} from '@/@types/base';
 
 // TODO: use Web Worker in browsers that support OffscreenCanvas
 export default class Rasterizer {
