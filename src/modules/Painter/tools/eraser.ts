@@ -5,14 +5,9 @@ export default Tool.create({
   [ActionType.MouseDown]: (ctx) => {
     ctx.globalCompositeOperation = 'destination-out';
   },
-  [ActionType.MouseDownAndMove]: (
-    ctx,
-    pointX,
-    pointY,
-    unit,
-  ) => {
+  [ActionType.Drag]: (ctx, {pointX, pointY, unit}) => {
     ctx.beginPath();
-    ctx.arc(pointX, pointY, unit * 10, 0, Math.PI*2, false);
+    ctx.arc(pointX, pointY, unit * 20, 0, Math.PI*2, false);
     ctx.fill();
     ctx.closePath();
   },

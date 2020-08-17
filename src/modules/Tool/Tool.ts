@@ -2,9 +2,11 @@ import {ActionType} from '@/constants';
 
 export type Drawing = (
   ctx: CanvasRenderingContext2D,
-  pointX: number,
-  pointY: number,
-  unit: number,
+  values: {
+    pointX: number,
+    pointY: number,
+    unit: number,
+  }
 ) => void;
 
 export type DrawingMap = {

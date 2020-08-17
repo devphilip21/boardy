@@ -1,4 +1,5 @@
 import Boardy, {ActionType} from '@/Boardy';
+import {Drawing} from '@/modules/Tool';
 
 const boardy = new Boardy({
   canvas: document.querySelector('canvas'),
@@ -10,24 +11,27 @@ boardy.on((action) => {
 
 // 1. maybe parent tool exist.
 //   - see example[add-tools] for details.
+const startRedLine: Drawing = (ctx, {pointX, pointY, unit}) => {
+  ctx.beginPath();
+  ctx.moveTo(pointX, pointY);
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 2 * unit;
+  ctx.strokeStyle = '#f00';
+};
+const drawRedLine: Drawing = (ctx, {pointX, pointY}) => {
+  ctx.lineTo(pointX, pointY);
+  ctx.stroke();
+};
+const endRedLine: Drawing = (ctx) => {
+  ctx.closePath();
+};
+
 const redLine = Boardy.Tool.create({
-  [ActionType.MouseDown]: (ctx, pointX, pointY, unit) => {
-    ctx.beginPath();
-    ctx.moveTo(pointX, pointY);
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = 1 * unit;
-    ctx.strokeStyle = '#f00';
-  },
-  [ActionType.MouseDownAndMove]: (ctx, pointX, pointY) => {
-    ctx.lineTo(pointX, pointY);
-    ctx.stroke();
-  },
-  [ActionType.MouseUp]: (ctx) => {
-    ctx.closePath();
-  },
-  [ActionType.MouseOut]: (ctx) => {
-    ctx.closePath();
-  },
+  [ActionType.MouseDown]: startRedLine,
+  [ActionType.DragIn]: startRedLine,
+  [ActionType.Drag]: drawRedLine,
+  [ActionType.MouseUp]: endRedLine,
+  [ActionType.DragOut]: endRedLine,
 });
 
 
@@ -41,11 +45,13 @@ const redLine = Boardy.Tool.create({
 //         pointY: CoordinateY,
 //         unit: OnePixelByResolution
 //       ) => void
+const startThickRedLine = (ctx, {unit}) => {
+  ctx.lineWidth = 10 * unit;
+};
 const thickRedLine = Boardy.Tool.extend(redLine, {
   // if mouse down, beginPath and set path style.
-  [ActionType.MouseDown]: (ctx, pointX, pointY, unit) => {
-    ctx.lineWidth = 10 * unit;
-  },
+  [ActionType.MouseDown]: startThickRedLine,
+  [ActionType.DragIn]: startThickRedLine,
 });
 
 
