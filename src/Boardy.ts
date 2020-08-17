@@ -3,7 +3,7 @@ import Renderer from '@/modules/Renderer';
 import Painter from '@/modules/Painter';
 import Rasterizer from '@/modules/Rasterizer';
 import Tool from '@/modules/Tool';
-import {Context, Action} from '@/@types/global';
+import {Context, Action, ContextSize, ContextResolution, ContextUnit} from '@/@types/base';
 import {ActionType} from '@/constants';
 import {ResizeObserver} from '@/utils';
 
@@ -33,7 +33,6 @@ export default class Boardy {
 
     // global context of all modules.
     this.context = this.initalizeContext(options);
-    this.context.ctx.offscreen.boardy = {};
 
     // manage drawing tools
     this.painter = options.painter || new Painter(this.context);
@@ -78,14 +77,14 @@ export default class Boardy {
   private initalizeContext(options?: IntializeOptions): Context {
     const screenElement: HTMLCanvasElement = options.canvas;
     const offscreenElement: HTMLCanvasElement = document.createElement('canvas');
-    const size: [number, number] = this.intializeSize(options);
-    const resolution: [number, number] = this.initializeResolution(options, size);
-    const unit: [number, number, number] = this.calculateUnit(size, resolution);
+    const size: ContextSize = this.intializeSize(options);
+    const resolution: ContextResolution = this.initializeResolution(options, size);
+    const unit: ContextUnit = this.calculateUnit(size, resolution);
 
-    screenElement.width = size[0];
-    screenElement.height = size[1];
-    offscreenElement.width = resolution[0];
-    offscreenElement.height = resolution[1];
+    screenElement.width = size.width;
+    screenElement.height = size.height;
+    offscreenElement.width = resolution.width;
+    offscreenElement.height = resolution.height;
 
     return {
       canvas: {
@@ -102,59 +101,66 @@ export default class Boardy {
     };
   }
 
-  private intializeSize(options: IntializeOptions): [number, number] {
-    const size: [number, number] = [
-      options.canvas.offsetWidth,
-      options.canvas.offsetHeight,
-    ] || [500, 500];
+  private intializeSize(options: IntializeOptions): ContextSize {
+    const size: ContextSize = options.canvas?.offsetWidth ? {
+      width: options.canvas.offsetWidth,
+      height: options.canvas.offsetHeight,
+    } : {
+      width: 500,
+      height: 500,
+    };
 
     return size;
   }
 
   private initializeResolution(
     options: IntializeOptions,
-    size: [number, number],
-  ): [number, number] {
-    const resolution: [number, number] = [0, 0];
+    size: ContextSize,
+  ): ContextResolution {
+    const resolution: ContextResolution = {
+      width: 0,
+      height: 0,
+    };
 
     if (options.resolution) {
-      resolution[0] = options.resolution.width ||
-        (options.resolution.height / size[1]) * size[0];
-      resolution[1] = options.resolution.height ||
-        (options.resolution.width / size[0]) * size[1];
+      resolution.width = options.resolution.width ||
+        (options.resolution.height / size.height) * size.width;
+      resolution.height = options.resolution.height ||
+        (options.resolution.width / size.width) * size.height;
     } else {
-      resolution[0] = 2048;
-      resolution[1] = (resolution[0] / size[0] * size[1]);
+      resolution.width = 2048;
+      resolution.height = (resolution.width / size.width * size.height);
     }
 
     return resolution;
   }
 
   private calculateUnit(
-    size: [number, number],
-    resolution: [number, number],
-  ): [number, number, number] {
-    const unit: [number, number, number] = [0, 0, 0];
+    size: ContextSize,
+    resolution: ContextResolution,
+  ): ContextUnit {
+    const unit: ContextUnit = {
+      width: 0,
+      height: 0,
+      contents: 0,
+    };
 
-    unit[0] = resolution[0] / size[0];
-    unit[1] = resolution[1] / size[1];
-    unit[2] = size[0] > size[1] ? unit[1] : unit[0];
+    unit.width = resolution.width / size.width;
+    unit.height = resolution.height / size.height;
+    unit.contents = size.width > size.height ? unit.height : unit.width;
 
     return unit;
   }
 
   private readonly handleResize = ({width, height}) => {
-    const nextUnit = this.calculateUnit(
-      [width, height],
-      [this.context.resolution[0], this.context.resolution[1]],
-    );
+    const nextUnit = this.calculateUnit({width, height}, this.context.resolution);
 
-    this.context.size[0] = width;
-    this.context.size[1] = height;
+    this.context.size.width = width;
+    this.context.size.height = height;
     this.context.canvas.screen.width = width;
     this.context.canvas.screen.height = height;
-    this.context.unit[0] = nextUnit[0];
-    this.context.unit[1] = nextUnit[1];
+    this.context.unit.width = nextUnit.width;
+    this.context.unit.height = nextUnit.height;
     this.renderer.render(null);
   }
 

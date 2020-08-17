@@ -7,7 +7,7 @@ const boardy = new Boardy({
 
 // 2. set drawing tool
 //    - blackline is default tool
-boardy.useTool('blackcrayon');
+boardy.useTool('blackline');
 
 // 3. if action is triggered,
 //    you should be able to render it
